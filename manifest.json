@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "Trandelion checker",
+    "version": "1.0",
+    "description": "Checks if Trandelion in running",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "alarms",
+        "tabs"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "host_permissions": [
+        "https://homeassistant.jobse.space/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://trandelion.com/*"
+            ],
+            "js": [
+                "content_script.js"
+            ]
+        }
+    ]
+}

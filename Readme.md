@@ -31,6 +31,6 @@ input_select:
       - Disabled
       - Enabled
       - Unavailable
-    initial: Disabled
+    initial: Unavailable
     icon: mdi:translate
 ```

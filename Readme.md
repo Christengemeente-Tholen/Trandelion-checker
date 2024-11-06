@@ -1,3 +1,5 @@
+This is a small browser plugin to get the current state of Trandelion within home assistant, things like if it is currently running and the url to the translation. And home assistant can enable/disable the translation when Trandelion is running.
+
 ```yaml
 # switch to show and change state
 switch:
@@ -28,6 +30,7 @@ input_select:
       - Disable
       - Disabled
       - Enabled
+      - Unavailable
     initial: Disabled
     icon: mdi:translate
 ```

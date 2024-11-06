@@ -12,7 +12,11 @@ async function getSensorState(sensor_name) {
     return result?.state;
 }
 
-async function updateSensorState(sensor_name, friendly_name, state) {
+async function updateSensorState(sensor_name, friendly_name, websiteState, currentTab) {
+    let running = websiteState.button_state ? "Enabled" : "Disabled";
+    if (currentTab == undefined) {
+        running = "Unavailable"
+    }
     const response = await fetch(`${URL}/api/states/input_select.${sensor_name}`, {
         method: "POST",
         headers: {
@@ -20,15 +24,18 @@ async function updateSensorState(sensor_name, friendly_name, state) {
             "content-type": "application/json",
         },
         body: JSON.stringify({
-            "state": state ? "Enabled" : "Disabled",
+            "state": running,
             "attributes": {
                 "friendly_name": friendly_name,
                 "options": [
                     "Enable",
                     "Disable",
                     "Disabled",
-                    "Enabled"
+                    "Enabled",
+                    "Unavailable"
                 ],
+                "url": websiteState.direct_link || "",
+                "image": websiteState.qr_code || "",
                 "editable": false,
                 "icon": "mdi:translate",
             },
@@ -47,26 +54,31 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener(() => {
-    chrome.tabs.query({ url: "*://trandelion.com/*" }, async (tabs) => {
-        let running = false;
+    chrome.tabs.query({ url: "*://trandelion.com/mytrandelion*" }, async (tabs) => {
+        let websiteState = { button_state: false, qr_code: undefined, direct_link: undefined };
         let currentTab = undefined;
         for (const tab of tabs) {
-            const response = await chrome.tabs.sendMessage(tab.id, { action: "check" })
-            if (![null, undefined].includes(response?.button_state)) {
-                running = response.button_state;
+            const response = await chrome.tabs.sendMessage(tab.id, { action: "check" });
+            if (![null, undefined].includes(response?.button_state) && response?.ready) {
+                websiteState = response;
                 currentTab = tab.id;
             }
         };
         const state = await getSensorState("trandelion");
         // Use a in-between Enable/Disable state from home assistant to not block state change from the browser
         if (currentTab !== undefined) {
-            if (running && state == "Disable") {
+            if (websiteState.button_state && state == "Disable") {
                 await chrome.tabs.sendMessage(currentTab, { action: state });
-            } else if (!running && state == "Enable") {
+            } else if (!websiteState.button_state && state == "Enable") {
                 await chrome.tabs.sendMessage(currentTab, { action: state });
+            }
+        } else {
+            if (state == "Enable") {
+                var newURL = "https://trandelion.com/mytrandelion/";
+                chrome.tabs.create({ url: newURL, active: true });
             }
         }
 
-        await updateSensorState("trandelion", "Trandelion", running);
+        await updateSensorState("trandelion", "Trandelion", websiteState, currentTab);
     });
 });

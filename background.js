@@ -1,10 +1,7 @@
-const URL = "https://homeassistant.jobse.space";
-const TOKEN = "";
-
-async function getSensorState(sensor_name) {
-    const response = await fetch(`${URL}/api/states/input_select.${sensor_name}`, {
+async function getSensorState(haConn, sensor_name) {
+    const response = await fetch(`${haConn?.url}/api/states/input_select.${sensor_name}`, {
         headers: {
-            "Authorization": `Bearer ${TOKEN}`,
+            "Authorization": `Bearer ${haConn?.token}`,
             "content-type": "application/json",
         },
     });
@@ -12,15 +9,15 @@ async function getSensorState(sensor_name) {
     return result?.state;
 }
 
-async function updateSensorState(sensor_name, friendly_name, websiteState, currentTab) {
+async function updateSensorState(haConn, sensor_name, friendly_name, websiteState, currentTab) {
     let running = websiteState.button_state ? "Enabled" : "Disabled";
     if (currentTab == undefined) {
         running = "Unavailable"
     }
-    const response = await fetch(`${URL}/api/states/input_select.${sensor_name}`, {
+    const response = await fetch(`${haConn?.url}/api/states/input_select.${sensor_name}`, {
         method: "POST",
         headers: {
-            "Authorization": `Bearer ${TOKEN}`,
+            "Authorization": `Bearer ${haConn?.token}`,
             "content-type": "application/json",
         },
         body: JSON.stringify({
@@ -64,7 +61,9 @@ chrome.alarms.onAlarm.addListener(() => {
                 currentTab = tab.id;
             }
         };
-        const state = await getSensorState("trandelion");
+
+        const homeAssistantConn = await chrome.storage.local.get(["url", "token"]);
+        const state = await getSensorState(homeAssistantConn, "trandelion");
         // Use a in-between Enable/Disable state from home assistant to not block state change from the browser
         if (currentTab !== undefined) {
             if (websiteState.button_state && state == "Disable") {
@@ -74,11 +73,10 @@ chrome.alarms.onAlarm.addListener(() => {
             }
         } else {
             if (state == "Enable") {
-                var newURL = "https://trandelion.com/mytrandelion/";
-                chrome.tabs.create({ url: newURL, active: true });
+                chrome.tabs.create({ url: "https://trandelion.com/mytrandelion/", active: true });
             }
         }
 
-        await updateSensorState("trandelion", "Trandelion", websiteState, currentTab);
+        await updateSensorState(homeAssistantConn, "trandelion", "Trandelion", websiteState, currentTab);
     });
 });

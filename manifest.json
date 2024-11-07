@@ -9,11 +9,15 @@
         "alarms",
         "tabs"
     ],
+    "action": {
+        "default_popup": "popup.html"
+    },
     "background": {
         "service_worker": "background.js"
     },
-    "host_permissions": [
-        "https://homeassistant.jobse.space/*"
+    "optional_host_permissions": [
+        "https://*/*",
+        "http://*/*"
     ],
     "content_scripts": [
         {

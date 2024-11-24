@@ -3,6 +3,9 @@
     "name": "Trandelion checker",
     "version": "1.0",
     "description": "Checks if Trandelion in running",
+    "icons": {
+        "128": "icons/translate.png"
+    },
     "permissions": [
         "storage",
         "alarms",

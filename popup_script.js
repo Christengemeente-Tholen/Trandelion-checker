@@ -15,14 +15,6 @@ chrome.storage.local.get(["url", "token"], function (items) {
     setTokenHelpElm(items?.url || "https://example.com");
 });
 
-async function checkPermissions(requiredPermissions) {
-    const hasPermissions = await chrome.permissions.contains(requiredPermissions);
-    if (!hasPermissions) {
-        console.debug("Missing permissions");
-        await chrome.permissions.request(requiredPermissions);
-    }
-}
-
 urlElm.onkeyup = (e) => {
     setTokenHelpElm(e.target.value);
 };
@@ -52,12 +44,14 @@ async function saveValues(url) {
 }
 
 document.getElementById("homeAssistantConn").addEventListener("submit", async (e) => {
+    const requiredPermissions = { origins: [new URL(urlElm.value).origin + "/*"] };
+
     e.preventDefault();
 
     try {
         const url = new URL(urlElm.value);
         // always needs the permissions, even to just check if the api connection works...
-        await checkPermissions({ origins: [url.origin + "/*"] });
+        await chrome.permissions.request(requiredPermissions);
         if (e?.submitter?.name == "test") {
             await checkValues(url);
         } else {

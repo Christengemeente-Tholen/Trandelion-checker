@@ -15,7 +15,10 @@
         "default_popup": "popup.html"
     },
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "background.js",
+        "scripts": [
+            "background.js"
+        ]
     },
     "optional_host_permissions": [
         "https://*/*",

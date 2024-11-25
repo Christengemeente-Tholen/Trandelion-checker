@@ -6,6 +6,12 @@
     "icons": {
         "128": "icons/translate.png"
     },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "trandelion_checker@christengemeentetholen.nl",
+            "strict_min_version": "128.0"
+        }
+    },
     "permissions": [
         "storage",
         "alarms",

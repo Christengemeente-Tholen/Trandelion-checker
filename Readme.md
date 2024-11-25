@@ -1,5 +1,7 @@
 This is a small browser plugin to get the current state of Trandelion within home assistant, things like if it is currently running and the url to the translation. And home assistant can enable/disable the translation when Trandelion is running.
 
+For the best experience, load the extension from folder within chrome. This will make chrome update the state way faster than using the extension available in the [chrome web store](https://chromewebstore.google.com/detail/trandelion-checker/jjehpfcmdefohbdcnepemchpcjhjeicd).
+
 You can setup the extension by clicking on it's icon.
 
 ![image](https://github.com/user-attachments/assets/906692c3-e266-499c-a4bc-ebf293ecec85)

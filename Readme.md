@@ -2,6 +2,8 @@ This is a small browser plugin to get the current state of Trandelion within hom
 
 For the best experience, load the extension from folder within chrome. This will make chrome update the state way faster than using the extension available in the [chrome web store](https://chromewebstore.google.com/detail/trandelion-checker/jjehpfcmdefohbdcnepemchpcjhjeicd).
 
+[Firefox addon](https://addons.mozilla.org/en-US/firefox/addon/trandelion-checker/)
+
 You can setup the extension by clicking on it's icon.
 
 ![image](https://github.com/user-attachments/assets/906692c3-e266-499c-a4bc-ebf293ecec85)
